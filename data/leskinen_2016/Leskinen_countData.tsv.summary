@@ -1,0 +1,15 @@
+Status	SRR3110973_sorted.bam	SRR3110970_sorted.bam	SRR3110972_sorted.bam	SRR3110975_sorted.bam	SRR3110979_sorted.bam	SRR3110978_sorted.bam	SRR3110977_sorted.bam	SRR3110976_sorted.bam	SRR3110971_sorted.bam	SRR3110974_sorted.bam
+Assigned	40848219	34152324	32787829	34051221	24499358	26045928	33513602	31752466	28385625	45299189
+Unassigned_Unmapped	734019	647783	541889	439409	215806	433627	529666	404465	359945	1320935
+Unassigned_Read_Type	0	0	0	0	0	0	0	0	0	0
+Unassigned_Singleton	0	0	0	0	0	0	0	0	0	0
+Unassigned_MappingQuality	0	0	0	0	0	0	0	0	0	0
+Unassigned_Chimera	0	0	0	0	0	0	0	0	0	0
+Unassigned_FragmentLength	0	0	0	0	0	0	0	0	0	0
+Unassigned_Duplicate	0	0	0	0	0	0	0	0	0	0
+Unassigned_MultiMapping	0	0	0	0	0	0	0	0	0	0
+Unassigned_Secondary	1669006	791112	1034547	1112664	988640	2450449	1546517	1810774	679311	2419512
+Unassigned_NonSplit	0	0	0	0	0	0	0	0	0	0
+Unassigned_NoFeatures	943434	1125905	800263	680441	497908	636272	753667	661999	596806	1267540
+Unassigned_Overlapping_Length	0	0	0	0	0	0	0	0	0	0
+Unassigned_Ambiguity	0	0	0	0	0	0	0	0	0	0
