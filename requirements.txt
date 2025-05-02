@@ -4,3 +4,11 @@ scikit-learn
 matplotlib
 seaborn
 joblib
+
+conda environment von environment.yml erstellen:
+> conda env create -f environment.yml
+> conda env list
+> conda activate vividVirions
+
+conda environment updaten:
+> conda env update -f environment.yml
