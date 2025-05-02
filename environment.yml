@@ -110,4 +110,3 @@ dependencies:
   - zstd=1.5.6=hc292b87_0
   - pip:
       - biopython==1.85
-prefix: /home/sam_linux/miniconda3/envs/vividVirions
