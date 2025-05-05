@@ -1,0 +1,22 @@
+Dataset	Phage annotation	Phage fasta	Phage ID (NCBI)	GEO/SRA	Info	Team
+Brandao_LB_full_raw_counts.tsv	Pseudomonas_phage_LUZ19.gff3	Pseudomonas_phage_LUZ19.fasta	NC_010326.1	GSE162278	cultured in LB medium	Bold Binders
+Ceyssens_non-directional_full_raw_counts.tsv	Pseudomonas_phage_phiKZ.gff3	Pseudomonas_phage_phiKZ.fasta	NC_004629.1	GSE58494	non-directional RNA-seq	Bold Binders
+Leskinen_full_raw_counts.tsv	Yersinia_phage_phiR1-37.gff3	Yersinia_phage_phiR1-37.fasta	AJ972879.2	GSE77068	-	Bold Binders
+Guegler_T7_minusToxIN_full_raw_counts.tsv	Enterobacteria_phage_T7.gff3	Enterobacteria_phage_T7.fasta	NC_001604.1	GSE161795	T7 on E. coli without toxIN system	Bold Binders
+Li_countData.tsv	Clostridium_phage_JD032.gff3	Clostridium_phage_JD032.fasta	MK473382.1	PRJNA559590	-	Bold Binders
+Sprenger_VC_delta_tdh_VP882_WT_full_raw_counts.tsv	Vibrio_phage_VP882.gff3	Vibrio_phage_VP882.fasta	NC_009016.1	GSE247769	delta tdh host	Bold Binders
+Wolfram-Schauerte_full_raw_counts.tsv	Enterobacteria_phage_T4.gff3	Enterobacteria_phage_T4.fasta	NC_000866.4	GSE211026	-	Bold Binders
+Ceyssens_directional_full_raw_counts.tsv	Pseudomonas_phage_phiKZ.gff3	Pseudomonas_phage_phiKZ.fasta	NC_004629.1	GSE58494	directional RNA-seq	Precise Phages
+Finstrlova_SH1000_full_raw_counts.tsv	Staphylococcus_phage_K.gff3	Staphylococcus_phage_K.fasta	NC_005880.2	GSE190637	host strain SH1000	Precise Phages
+Guegler_T4_plusToxIN_full_raw_counts.tsv	Enterobacteria_phage_T4.gff3	Enterobacteria_phage_T4.fasta	NC_000866.4	GSE161794	T4 on E. coli with toxIN system	Precise Phages
+Kuptsov_full_raw_counts.tsv	Staphylococcus_phage_vB_SauM-515A1.gff3	Staphylococcus_phage_vB_SauM-515A1.fasta	MN047438.1	PRJNA659920	-	Precise Phages
+Meaden_BIM_full_raw_counts.tsv	Pseudomonas_phage_DMS3.gff3	Pseudomonas_phage_DMS3.fasta	NC_008717.1	PRJEB31514	-	Precise Phages
+Sprenger_VC_WT_VP882_WT_full_raw_counts.tsv	Vibrio_phage_VP882.gff3	Vibrio_phage_VP882.fasta	NC_009016.1	GSE247770	WT host and WT phage	Precise Phages
+Zhong_full_raw_counts.tsv	Pseudomonas_phage_phiYY_complete.gff3	Pseudomonas_phage_phiYY_complete.fasta	KX074201.1 KX074202.1 KX074203.1	GSE128811	-	Precise Phages
+Brandao_MCCM_full_raw_counts.tsv	Pseudomonas_phage_LUZ19.gff3	Pseudomonas_phage_LUZ19.fasta	NC_010326.1	GSE162278	cultured in MCCM medium	Vivid Virions
+Finstrlova_Newman_full_raw_counts.tsv	Staphylococcus_phage_K.gff3	Staphylococcus_phage_K.fasta	NC_005880.2	GSE190637	host strain Newman	Vivid Virions
+Guegler_T4_minusToxIN_full_raw_counts.tsv	Enterobacteria_phage_T4.gff3	Enterobacteria_phage_T4.fasta	NC_000866.4	GSE161794	T4 on E. coli without toxIN system	Vivid Virions
+Guegler_T7_plusToxIN_full_raw_counts.tsv	Enterobacteria_phage_T7.gff3	Enterobacteria_phage_T7.fasta	NC_001604.1	GSE161795	T7 on E. coli with toxIN system	Vivid Virions
+Lood_full_raw_counts.tsv	Pseudomonas_phage_vB_PaeM_PA5oct.gff3	Pseudomonas_phage_vB_PaeM_PA5oct.fasta	MK797984.1	GSE130190	paired-end and single-end data combined	Vivid Virions
+Sprenger_VC_WT_VP882_delta_cpdS_full_raw_counts.tsv	Vibrio_phage_VP882.gff3	Vibrio_phage_VP882.fasta	NC_009016.1	GSE247770	delta cpdS phage	Vivid Virions
+Yang_full_raw_counts.tsv	Acinetobacter_phage_Abp1.gff3	Acinetobacter_phage_Abp1.fasta	NC_021316.1	GSE117396	-	Vivid Virions
