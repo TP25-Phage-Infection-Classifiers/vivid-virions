@@ -3,23 +3,8 @@ File: Brandao_MCCM_full_raw_counts_tpm_marked.tsv
 - Found column marker
 - removed columns: none
 
-File: Finstrlova_Newman_full_raw_counts_tpm_marked.tsv
-- remove outlier rows: 2853
-- Found column marker
-- removed columns: none
-
-File: Guegler_T4_minusToxIN_full_raw_counts_tpm_marked.tsv
-- remove outlier rows: 4484
-- Found column marker
-- removed columns: none
-
-File: Guegler_T7_plusToxIN_full_raw_counts_tpm_marked.tsv
-- remove outlier rows: 4484
-- Found column marker
-- removed columns: none
-
-File: Lood_full_raw_counts_tpm_marked.tsv
-- remove outlier rows: 5665
+File: Yang_full_raw_counts_tpm_marked.tsv
+- remove outlier rows: 3752
 - Found column marker
 - removed columns: none
 
@@ -28,7 +13,22 @@ File: Sprenger_VC_WT_VP882_delta_cpdS_full_raw_counts_tpm_marked.tsv
 - Found column marker
 - removed columns: none
 
-File: Yang_full_raw_counts_tpm_marked.tsv
-- remove outlier rows: 3752
+File: Guegler_T7_plusToxIN_full_raw_counts_tpm_marked.tsv
+- remove outlier rows: 4484
+- Found column marker
+- removed columns: none
+
+File: Guegler_T4_minusToxIN_full_raw_counts_tpm_marked.tsv
+- remove outlier rows: 4484
+- Found column marker
+- removed columns: none
+
+File: Finstrlova_Newman_full_raw_counts_tpm_marked.tsv
+- remove outlier rows: 2853
+- Found column marker
+- removed columns: none
+
+File: Lood_full_raw_counts_tpm_marked.tsv
+- remove outlier rows: 5665
 - Found column marker
 - removed columns: none

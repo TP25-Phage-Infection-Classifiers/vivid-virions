@@ -1,7 +1,7 @@
-..\data\datasets_normalized\Brandao_MCCM_full_raw_counts_tpm.tsv: missing values: 0, negligible genes: 0, genes with a too high count at time 0: 325
-..\data\datasets_normalized\Finstrlova_Newman_full_raw_counts_tpm.tsv: missing values: 0, negligible genes: 0, genes with a too high count at time 0: 430
-..\data\datasets_normalized\Guegler_T4_minusToxIN_full_raw_counts_tpm.tsv: missing values: 0, negligible genes: 0, genes with a too high count at time 0: 398
-..\data\datasets_normalized\Guegler_T7_plusToxIN_full_raw_counts_tpm.tsv: missing values: 0, negligible genes: 0, genes with a too high count at time 0: 359
-..\data\datasets_normalized\Lood_full_raw_counts_tpm.tsv: missing values: 0, negligible genes: 0, genes with a too high count at time 0: 237
-..\data\datasets_normalized\Sprenger_VC_WT_VP882_delta_cpdS_full_raw_counts_tpm.tsv: missing values: 0, negligible genes: 322, genes with a too high count at time 0: 499
-..\data\datasets_normalized\Yang_full_raw_counts_tpm.tsv: missing values: 0, negligible genes: 0, genes with a too high count at time 0: 0
+../data/datasets_normalized/Lood_full_raw_counts_tpm.tsv: missing values: 0, negligible genes: 0, genes with a too high count at time 0: 237
+../data/datasets_normalized/Yang_full_raw_counts_tpm.tsv: missing values: 0, negligible genes: 0, genes with a too high count at time 0: 0
+../data/datasets_normalized/Finstrlova_Newman_full_raw_counts_tpm.tsv: missing values: 0, negligible genes: 0, genes with a too high count at time 0: 430
+../data/datasets_normalized/Brandao_MCCM_full_raw_counts_tpm.tsv: missing values: 0, negligible genes: 0, genes with a too high count at time 0: 325
+../data/datasets_normalized/Guegler_T4_minusToxIN_full_raw_counts_tpm.tsv: missing values: 0, negligible genes: 0, genes with a too high count at time 0: 398
+../data/datasets_normalized/Sprenger_VC_WT_VP882_delta_cpdS_full_raw_counts_tpm.tsv: missing values: 0, negligible genes: 322, genes with a too high count at time 0: 499
+../data/datasets_normalized/Guegler_T7_plusToxIN_full_raw_counts_tpm.tsv: missing values: 0, negligible genes: 0, genes with a too high count at time 0: 359
