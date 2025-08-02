@@ -1,0 +1,7 @@
+split	left_out_group	train_total	test_total	overlap_geneids	train_class_counts	test_class_counts
+0	Brandao_MCCM_full_raw_counts_tpm_filtered_feature_table.tsv	1100	54	0	{'late': 489, 'middle': 463, 'early': 148}	{'late': 32, 'middle': 19, 'early': 3}
+1	Finstrlova_Newman_full_raw_counts_tpm_filtered_feature_table.tsv	917	237	0	{'late': 462, 'middle': 382, 'early': 73}	{'middle': 100, 'early': 78, 'late': 59}
+2	Guegler_T4_minusToxIN_full_raw_counts_tpm_filtered_feature_table.tsv	866	288	0	{'middle': 379, 'late': 344, 'early': 143}	{'late': 177, 'middle': 103, 'early': 8}
+3	Guegler_T7_plusToxIN_full_raw_counts_tpm_filtered_feature_table.tsv	1094	60	0	{'late': 500, 'middle': 450, 'early': 144}	{'middle': 32, 'late': 21, 'early': 7}
+4	Lood_full_raw_counts_tpm_filtered_feature_table.tsv	693	461	0	{'late': 312, 'middle': 276, 'early': 105}	{'late': 209, 'middle': 206, 'early': 46}
+5	Yang_full_raw_counts_tpm_filtered_feature_table.tsv	1100	54	0	{'late': 498, 'middle': 460, 'early': 142}	{'late': 23, 'middle': 22, 'early': 9}
