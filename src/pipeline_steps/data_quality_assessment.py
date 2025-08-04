@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 
-# NOTE: This implementation mirrors the original notebook logic to keep output identical.
 
 def _detect_empty_cells(df: pd.DataFrame):
     """
@@ -16,10 +15,10 @@ def _detect_empty_cells(df: pd.DataFrame):
       - Fill NaNs in the data with -1.
     """
     missing_values_total = int(df.isna().sum().sum())
-    # For identical order: the notebook used df.iloc[:, 1:] across ALL remaining columns
+    
     flags = df.iloc[:, 1:].isna().any(axis=0).astype(int).tolist()
     marker_row = ["Replicates with missing value"] + flags
-    # Fill NaNs as in the notebook
+    
     df_filled = df.fillna(-1)
     return df_filled, missing_values_total, marker_row
 
@@ -43,7 +42,7 @@ def _too_high_zero_value(df: pd.DataFrame):
                     flag = 1
                     break
             except Exception:
-                # Non-numeric or missing -> ignore for this check
+                
                 pass
         marks.append(flag)
     return marks
@@ -58,7 +57,7 @@ def _detect_relative_changes(df: pd.DataFrame, threshold: float):
       - negligible_changes = 1 if CV < threshold else 0
       - Return both arrays.
     """
-    # Exactly as in the notebook: counts are assumed in 1..-2
+    
     count_cols = df.columns[1:-2]
     rel_changes = []
     negligible = []
@@ -93,7 +92,7 @@ def _collect_outlier_genes(df: pd.DataFrame):
       (Applied AFTER the marker row is appended in the notebook, so
        the marker row’s Outlier becomes NaN in the saved file.)
     """
-    # This replicates the original boolean expression exactly
+    
     if "Entity" in df.columns:
         outlier = (
             (df["negligible changes"] == 1) |
@@ -110,23 +109,9 @@ def _collect_outlier_genes(df: pd.DataFrame):
     return df
 
 def run_quality_assessment(normalized_dir, marked_dir, threshold: float = 0.1):
-    """
-    Make marked tables exactly like the notebook:
-      1) Read each normalized *.tsv
-      2) Fill NaNs with -1
-      3) Compute:
-         - relative changes & negligible changes (using columns 1..-2)
-         - Genes with too high Zero count (any '0_R*' > 500)
-      4) Append the special 'Replicates with missing value' row
-         (padded with zeros to match current number of columns)
-      5) THEN add 'Outlier' column (so the marker row's Outlier = NaN)
-      6) Save as <stem>_marked.tsv
-      7) Write overview_marks.txt
-
-    Args mirror pipeline usage:
-      normalized_dir: folder with *_tpm.tsv
-      marked_dir:     output folder for *_tpm_marked.tsv
-    """
+    
+    # Make marked tables exactly like the notebook:
+      
     normalized_dir = Path(normalized_dir)
     marked_dir = Path(marked_dir)
     marked_dir.mkdir(parents=True, exist_ok=True)
@@ -145,10 +130,10 @@ def run_quality_assessment(normalized_dir, marked_dir, threshold: float = 0.1):
             print(f"Failed to read {in_path.name}: {e}")
             continue
 
-        # 1) Missing cells marker and fill with -1 (identical to notebook)
+        # 1) Missing cells marker and fill with -1 
         df, missing_values, marker_row = _detect_empty_cells(df)
 
-        # 2) Relative changes & negligible changes (using columns 1..-2)
+        # 2) Relative changes & negligible changes
         rel, neg = _detect_relative_changes(df, threshold=threshold)
 
         # 3) '0_R*' > 500 flags
@@ -159,13 +144,13 @@ def run_quality_assessment(normalized_dir, marked_dir, threshold: float = 0.1):
         df["negligible changes"] = neg
         df["Genes with too high Zero count"] = high0
 
-        # 4) Append the marker row BEFORE adding 'Outlier' (to match notebook)
+        # 4) Append the marker row BEFORE adding 'Outlier'
         # Pad marker_row to match current number of columns
         while len(marker_row) < len(df.columns):
             marker_row.append(0)
         df.loc[len(df)] = marker_row
 
-        # 5) Now add Outlier column (marker row will get NaN for Outlier, same as notebook)
+        # 5) Now add Outlier column 
         df = _collect_outlier_genes(df)
 
         # Overview stats (same counts as notebook)

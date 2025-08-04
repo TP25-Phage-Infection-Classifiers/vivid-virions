@@ -15,7 +15,7 @@ def find_logo_indices(logo_root: Path) -> list[int]:
     return sorted(idx)
 
 def load_logo_split(base_dir: Path, i: int):
-    # try with /splits/, then fallback
+    
     train_fp = base_dir / "splits_logo" / "splits" / f"train_split_{i}.tsv"
     test_fp  = base_dir / "splits_logo" / "splits" / f"test_split_{i}.tsv"
     if not train_fp.exists():

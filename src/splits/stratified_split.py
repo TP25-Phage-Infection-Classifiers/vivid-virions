@@ -30,14 +30,14 @@ def main():
     train_df.to_csv(os.path.join(OUTPUT_DIR, "train.tsv"), sep="\t", index=False)
     test_df.to_csv(os.path.join(OUTPUT_DIR, "test.tsv"), sep="\t", index=False)
 
-    print("🔬 Class distribution (Train):")
+    print("Class distribution (Train):")
     print(train_df[label_col].value_counts(normalize=True))
-    print("\n🧪 Class distribution (Test):")
+    print("\nClass distribution (Test):")
     print(test_df[label_col].value_counts(normalize=True))
 
     overlap = set(train_df.get("Geneid", [])).intersection(set(test_df.get("Geneid", [])))
-    print("⚠️ Achtung: {} überlappende Gene!".format(len(overlap)) if overlap else
-          "✅ Kein Overlap der Gene zwischen Train und Test")
+    print("{} overlapping gene!".format(len(overlap)) if overlap else
+          "No overlapping genes")
 
 if __name__ == "__main__":
     main()

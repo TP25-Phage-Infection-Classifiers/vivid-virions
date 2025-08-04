@@ -24,9 +24,8 @@ from sklearn.metrics import (
 )
 from sklearn.exceptions import InconsistentVersionWarning
 
-# -------------------------
-# Config defaults (can be overridden via CLI)
-# -------------------------
+
+# Config defaults 
 DEFAULT_BASE_MODEL_DIR = Path("pipeline_results/models")
 DEFAULT_REPORT_DIR = Path("pipeline_results/report")
 DEFAULT_SPLITS = list(range(7))  # 0..5 = LOGO, 6 = stratified
@@ -41,9 +40,8 @@ warnings.filterwarnings("ignore", category=InconsistentVersionWarning)
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# -------------------------
-# MLP definition (must match training)
-# -------------------------
+
+# MLP definition 
 class MLP(nn.Module):
     def __init__(self, input_dim, num_classes):
         super(MLP, self).__init__()
@@ -59,9 +57,8 @@ class MLP(nn.Module):
         x = self.drop(F.relu(self.fc3(x)))
         return self.out(x)
 
-# -------------------------
+
 # Helpers
-# -------------------------
 def _ensure_axes(n_models: int):
     fig, axes = plt.subplots(1, n_models, figsize=(6 * n_models, 5))
     if n_models == 1:
@@ -115,7 +112,7 @@ def _predict(model_name: str, X_test, le, model_path):
       by using model.feature_names_in_ when available.
     """
     if model_name == "mlp":
-        # Torch MLP (expects numpy array / tensor)
+        # Torch MLP 
         if isinstance(X_test, pd.DataFrame):
             X_used = X_test.values
         else:
@@ -144,9 +141,8 @@ def _predict(model_name: str, X_test, le, model_path):
 
     return model.predict(X_used)
 
-# -------------------------
+
 # Main evaluation
-# -------------------------
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--base-model-dir", default=str(DEFAULT_BASE_MODEL_DIR),
@@ -193,7 +189,7 @@ def main():
                     "ax": axes[i],
                 })
 
-                # Metrics (y_test is encoded already)
+                # Metrics 
                 metrics_list.append({
                     "Split": split_number,
                     "Model": name,
@@ -214,22 +210,19 @@ def main():
         else:
             print("  No models evaluated for this split.")
 
-    # Nothing to summarize?
     if not all_results:
         print("No results to summarize. Exiting.")
         return
 
-    # -------------------------
+    
     # Aggregate & save metrics table
-    # -------------------------
     df_all = pd.DataFrame(all_results)
     csv_path = report_dir / "metrics_all_splits.csv"
     df_all.to_csv(csv_path, index=False)
     print(f"Saved metrics table -> {csv_path}")
 
-    # -------------------------
+
     # Summary plots
-    # -------------------------
     sns.set_style("whitegrid")
 
     # 1) Lines across splits
@@ -248,17 +241,17 @@ def main():
         plt.savefig(out_fp, dpi=200)
         plt.close()
 
-    # 2) Boxplots (fix FutureWarning by using hue="Model")
+    # 2) Boxplots 
     for metric in ["Accuracy", "Precision", "Recall", "F1"]:
         plt.figure(figsize=(8, 5))
         sns.boxplot(
             x="Model",
             y=metric,
-            hue="Model",            # <- add hue to match palette mapping
+            hue="Model",           
             data=df_all,
             palette=COLOR_PALETTE,
-            dodge=False,            # single box per model
-            legend=False            # we already label x axis
+            dodge=False,            
+            legend=False           
         )
         plt.title(f"{metric} Distribution Across Splits")
         plt.ylabel(metric)

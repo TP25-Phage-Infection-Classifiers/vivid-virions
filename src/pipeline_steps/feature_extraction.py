@@ -6,6 +6,8 @@ from Bio.SeqUtils import gc_fraction
 from Bio.Seq import Seq
 from collections import Counter
 from itertools import product
+import tarfile
+
 
 # ----- optional imports -----
 try:
@@ -21,11 +23,11 @@ try:
 except Exception:
     HAS_DSSP = False
 
-# NCBI E-utilities requires a contact email
+
 Entrez.email = "david.martin@student.uni-tuebingen.de"
 
 
-# ======================= helpers =======================
+# helpers
 
 def _get_sequences_from_geneid(genome_accession: str, geneid: str):
     """
@@ -39,7 +41,7 @@ def _get_sequences_from_geneid(genome_accession: str, geneid: str):
         record = SeqIO.read(handle, "genbank")
         handle.close()
     except Exception as e:
-        print(f"⚠ Failed to fetch {genome_accession}: {e}")
+        print(f"Failed to fetch {genome_accession}: {e}")
         return ("ERROR_FETCH", "ERROR_FETCH")
 
     tag = str(geneid).replace("gene-", "").strip()
@@ -71,8 +73,22 @@ def _count_kmers(seq: str, k: int, alphabet=("A", "T", "G", "C")):
     all_kmers = ["".join(p) for p in product(alphabet, repeat=k)]
     return [counts.get(kmer, 0) for kmer in all_kmers], all_kmers
 
+def _extract_pdb_archive(archive_path: Path, output_dir: Path):
+    if not output_dir.exists():
+        output_dir.mkdir(parents=True)
 
-# ======================= main API =======================
+    with tarfile.open(archive_path, "r:gz") as tar:
+        def is_within_directory(directory, target):
+            abs_directory = os.path.abspath(directory)
+            abs_target = os.path.abspath(target)
+            return os.path.commonpath([abs_directory]) == os.path.commonpath([abs_directory, abs_target])
+
+        for member in tar.getmembers():
+            if member.name.endswith(".pdb"):
+                member.name = Path(member.name).name  # flatten path
+                tar.extract(member, path=output_dir)
+
+# main API
 
 def extract_features(
     classified_dir,
@@ -97,20 +113,20 @@ def extract_features(
     out_feature_dir.mkdir(parents=True, exist_ok=True)
     base_output_path = Path(base_output_path)
 
-    # ---------------- 1) + 2) fetch sequences ----------------
+    # 1) + 2) fetch sequences
     files = list(classified_dir.glob("*_classified.tsv"))
     if not files:
-        print(f"⚠ No *_classified.tsv found in {classified_dir}")
+        print(f"No *_classified.tsv found in {classified_dir}")
         return
 
     for file_path in files:
         fname = file_path.name
-        print(f"🔍 Fetching sequences: {fname}")
+        print(f"Fetching sequences: {fname}")
         df = pd.read_csv(file_path, sep="\t")
 
         genome_acc = genome_mapping.get(fname)
         if not genome_acc:
-            print(f"⚠ No genome accession mapped for {fname} — skipped.")
+            print(f"No genome accession mapped for {fname} — skipped.")
             continue
 
         prot_list, dna_list = [], []
@@ -126,21 +142,24 @@ def extract_features(
         df.to_csv(out_fp, sep="\t", index=False)
         print(f"✅ Saved sequences -> {out_fp}")
 
-    # ---------------- 3) DNA features ----------------
+    # 3) DNA features
     dna_out = base_output_path / "dna_feature_table"
     _build_dna_feature_tables(out_feature_dir, dna_out, k=3)
 
-    # ---------------- 4) Protein k=3 + physchem ----------------
+    # 4) Protein k=3 + physchem
     protein_out = base_output_path / "features" / "protein" / "protein_primary_table_k=3"
     _build_protein_k3_features(out_feature_dir, protein_out)
 
-    # ---------------- 5) Secondary structure (optional) ----------------
+    # 5) Secondary structure 
     struct_out = base_output_path / "protein_structures" / "features"
     if dssp_dir is None:
-        dssp_dir = base_output_path / "protein_structures" / "dssp"
-    _build_structure_features(dssp_dir, out_dir=struct_out)
+        dssp_dir = Path("data/pipeline_data_set/protein")
 
-    # ---------------- 6) Merge ALL features ----------------
+    input_dir = Path("data/pipeline_data_set")
+
+    _build_structure_features(input_dir=input_dir, dssp_dir=dssp_dir, out_dir=struct_out)
+
+    # 6) Merge ALL features
     merged_out = base_output_path / "feature_tables"
     _merge_all_features(
         dna_dir=dna_out,
@@ -149,7 +168,7 @@ def extract_features(
         out_dir=merged_out,
     )
 
-    # ---------------- 7) Failure report ----------------
+    # 7) Failure report
     _report_failed_extractions(out_feature_dir)
 
     print("✨ Feature extraction complete.")
@@ -159,7 +178,7 @@ def extract_features(
     print(f"   Merged tables:      {merged_out}")
 
 
-# ======================= step builders =======================
+# step builders
 
 def _build_dna_feature_tables(seq_dir: Path, out_dir: Path, k=3):
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -229,13 +248,13 @@ def _build_dna_feature_tables(seq_dir: Path, out_dir: Path, k=3):
         df_out = pd.concat([feats, km_df], axis=1)
         out_file = out_dir / file.name
         df_out.to_csv(out_file, sep="\t", index=False)
-        print(f"🧬 DNA features -> {out_file}")
+        print(f"DNA features -> {out_file}")
 
 
 def _build_protein_k3_features(seq_dir: Path, out_dir: Path):
     out_dir.mkdir(parents=True, exist_ok=True)
     if not HAS_PROTPARAM:
-        print("⚠ Skipping protein features (Bio.SeqUtils.ProtParam not available).")
+        print("Skipping protein features (Bio.SeqUtils.ProtParam not available).")
         return
 
     AA_LIST = list("ACDEFGHIKLMNPQRSTVWY")
@@ -266,7 +285,7 @@ def _build_protein_k3_features(seq_dir: Path, out_dir: Path):
         df = pd.read_csv(file, sep="\t")
         required = {"Geneid", "classification", "ProteinSequence"}
         if not required.issubset(df.columns):
-            print(f"⚠ Skipping protein features for {file.name} (missing columns)")
+            print(f"Skipping protein features for {file.name} (missing columns)")
             continue
 
         feats = []
@@ -277,28 +296,44 @@ def _build_protein_k3_features(seq_dir: Path, out_dir: Path):
         out_df = pd.DataFrame(feats)
         out_path = out_dir / file.name.replace(".tsv", "_k3_physchem.tsv")
         out_df.to_csv(out_path, sep="\t", index=False)
-        print(f"🧪 Protein k=3 features -> {out_path}")
+        print(f"Protein k=3 features -> {out_path}")
 
 
-def _build_structure_features(dssp_dir: str | Path, out_dir: Path):
-    """
-    Build secondary-structure features from DSSP files (if available).
-    Input:  *.dssp files in dssp_dir
-    Output: one TSV per dataset in out_dir
-    """
+
+def _build_structure_features(input_dir: Path, dssp_dir: Path, out_dir: Path):
+    import subprocess
+    from collections import Counter
+    import numpy as np
+
     out_dir.mkdir(parents=True, exist_ok=True)
+    dssp_dir = Path(dssp_dir)
+
+    pdb_archive = input_dir / "protein" / "pdbs_teamprojekt.tar.gz"
+    _extract_pdb_archive(pdb_archive, dssp_dir)
 
     if not HAS_DSSP:
-        print("ℹ Skipping structure features (DSSP parser not available).")
+        print("Skipping structure features (DSSP parser not available).")
         return
 
-    dssp_dir = Path(dssp_dir)
+    def convert_to_dssp(input_file: Path, output_file: Path):
+        try:
+            subprocess.run(["mkdssp", "-i", str(input_file), "-o", str(output_file)], check=True)
+            print(f" Converted {input_file.name} → {output_file.name}")
+        except Exception as e:
+            print(f"DSSP conversion failed for {input_file.name}: {e}")
+
+    # Convert .pdb/.cif to .dssp if missing
+    for file in dssp_dir.glob("*"):
+        if file.suffix.lower() in [".pdb", ".cif"]:
+            out_path = dssp_dir / (file.stem + ".dssp")
+            if not out_path.exists():
+                convert_to_dssp(file, out_path)
+
     dssp_files = list(dssp_dir.glob("*.dssp"))
     if not dssp_files:
         print(f"ℹ No .dssp files found in {dssp_dir}, skipping structure features.")
         return
 
-    # Max ASA values per residue for RSA (Tien et al., 2013 (emp.))
     MAX_ASA = {
         "A": 121.0, "R": 265.0, "N": 187.0, "D": 187.0, "C": 148.0,
         "Q": 214.0, "E": 214.0, "G": 97.0,  "H": 216.0, "I": 195.0,
@@ -306,58 +341,73 @@ def _build_structure_features(dssp_dir: str | Path, out_dir: Path):
         "S": 143.0, "T": 163.0, "W": 264.0, "Y": 255.0, "V": 165.0,
     }
 
+    # Load protein sequences from prior step
+    protein_map = {}
+    for file in Path("pipeline_results/feature_extraction").glob("*.tsv"):
+        try:
+            df = pd.read_csv(file, sep="\\t")
+            for _, row in df.iterrows():
+                protein_map[str(row["Geneid"])] = row.get("ProteinSequence", "")
+        except Exception:
+            pass
+
+    def protein_analysis(seq: str):
+        try:
+            if isinstance(seq, str) and "X" not in seq and len(seq) > 0:
+                analysis = ProteinAnalysis(seq)
+                return {
+                    "molecular_weight": analysis.molecular_weight(),
+                    "aromaticity": analysis.aromaticity(),
+                }
+        except Exception:
+            return {}
+        return {}
+
     def dssp_features(dssp_file: Path):
-        # Parse dssp file
         parser = parseDSSP(dssp_file)
         parser.parse()
-        df_dssp = parser.dictTodataframe()
+        df = parser.dictTodataframe()
 
-        # " " -> "C" (coil) and strip
-        df_dssp["struct"] = df_dssp["struct"].apply(lambda x: "C" if x == "   " else str(x).strip())
-        # Normalize helix types (G/I -> H)
-        df_dssp["struct"] = df_dssp["struct"].apply(lambda x: "H" if x in ["G", "I"] else x)
+        # Clean and normalize secondary structure annotations
+        df["struct"] = df["struct"].apply(lambda x: "C" if str(x).strip() == "" else str(x).strip())
+        df["struct"] = df["struct"].apply(lambda x: "H" if x in ["G", "I"] else x)
 
-        # Structure content (H/E/C fractions)
-        counts = df_dssp["struct"].value_counts()
-        total = len(df_dssp) or 1
-        frac = {k: counts.get(k, 0) / total for k in ["H", "E", "C"]}
+        structure_counts = df["struct"].value_counts()
+        total = len(df)
+        struc_content = {k: structure_counts.get(k, 0) / total for k in ["H", "E", "C"]}
+        for frac in ["H", "E", "C"]:
+            struc_content.setdefault(frac, 0.0)
 
-        # RSA from absolute accessibility
-        df_dssp["acc"] = pd.to_numeric(df_dssp["acc"])
-        df_dssp["rsa"] = df_dssp.apply(lambda r: r["acc"] / MAX_ASA.get(r["aa"], float("nan")), axis=1)
-        rsa_mean = float(df_dssp["rsa"].mean())
+        df["acc"] = pd.to_numeric(df["acc"], errors="coerce")
+        df["rsa"] = df.apply(lambda row: row["acc"] / MAX_ASA.get(row["aa"], np.nan), axis=1)
+        rsa_mean = df["rsa"].mean(skipna=True)
+        frac_exposed = (df["rsa"] > 0.2).mean()
 
-        # Fraction exposed (RSA > 0.2)
-        frac_exposed = float((df_dssp["rsa"] > 0.2).mean())
-
-        # Transitions per residue
-        structs = df_dssp["struct"].tolist()
-        transitions = 0
-        for i in range(1, len(structs)):
-            if structs[i] != structs[i-1]:
-                transitions += 1
-        trans_per_res = transitions / len(structs) if structs else 0.0
+        structs = df["struct"].tolist()
+        transitions = sum(1 for i in range(1, len(structs)) if structs[i] != structs[i - 1])
+        transitions_per_res = transitions / len(structs) if structs else 0.0
 
         return {
-            "H_frac": frac["H"],
-            "E_frac": frac["E"],
-            "C_frac": frac["C"],
+            "H_frac": struc_content["H"],
+            "E_frac": struc_content["E"],
+            "C_frac": struc_content["C"],
             "rsa_mean": rsa_mean,
             "frac_exposed": frac_exposed,
-            "transitions_per_residue": trans_per_res,
+            "transitions_per_residue": transitions_per_res,
         }
 
-    # Build one table per DSSP (named by DSSP filename without suffix)
     for fp in dssp_files:
-        feats = pd.DataFrame([dssp_features(fp)])
-        # Use DSSP basename (without .dssp) as dataset key
-        feats["Geneid"] = fp.stem  # adjust if you have per-gene DSSP files
-        out_path = out_dir / f"{fp.stem}_structure_features.tsv"
-        feats.to_csv(out_path, sep="\t", index=False)
-        print(f"🧱 Structure features -> {out_path}")
+        gid = fp.stem
+        struct_feats = dssp_features(fp)
+        prot_feats = protein_analysis(protein_map.get(gid, ""))
+        feats = pd.DataFrame([{**struct_feats, **prot_feats, "Geneid": gid}])
+        out_path = out_dir / f"{gid}_structure_features.tsv"
+        feats.to_csv(out_path, sep="\\t", index=False)
+        print(f"Structure features -> {out_path}")
 
 
-# ======================= merging =======================
+
+# merging
 
 def _merge_all_features(dna_dir: Path, protein_dir: Path, struct_dir: Path, out_dir: Path):
     """
@@ -370,7 +420,7 @@ def _merge_all_features(dna_dir: Path, protein_dir: Path, struct_dir: Path, out_
 
     dna_files = sorted(Path(dna_dir).glob("*.tsv"))
     if not dna_files:
-        print(f"⚠ No DNA feature tables found in {dna_dir}; skipping merge.")
+        print(f"No DNA feature tables found in {dna_dir}; skipping merge.")
         return
 
     def norm_key(stem: str) -> str:
@@ -400,7 +450,7 @@ def _merge_all_features(dna_dir: Path, protein_dir: Path, struct_dir: Path, out_
                 dfs.append(df_p)
                 sources.append("Protein")
             except Exception as e:
-                print(f"⚠ Could not read protein features for {dna_fp.name}: {e}")
+                print(f"Could not read protein features for {dna_fp.name}: {e}")
 
         if key in struct_map:
             try:
@@ -408,7 +458,7 @@ def _merge_all_features(dna_dir: Path, protein_dir: Path, struct_dir: Path, out_
                 dfs.append(df_s)
                 sources.append("Structure")
             except Exception as e:
-                print(f"⚠ Could not read structure features for {dna_fp.name}: {e}")
+                print(f"Could not read structure features for {dna_fp.name}: {e}")
 
         def _m(left, right):
             return left.merge(right, on="Geneid", how="outer", suffixes=("", "_dup"))
@@ -416,7 +466,7 @@ def _merge_all_features(dna_dir: Path, protein_dir: Path, struct_dir: Path, out_
         try:
             df_merged = reduce(_m, dfs)
         except Exception as e:
-            print(f"❌ Merge failed for {dna_fp.name}: {e}")
+            print(f"Merge failed for {dna_fp.name}: {e}")
             continue
 
         # Coalesce classification columns if duplicates appear
@@ -434,10 +484,10 @@ def _merge_all_features(dna_dir: Path, protein_dir: Path, struct_dir: Path, out_
 
         out_path = Path(out_dir) / dna_fp.name.replace("_classified.tsv", "_feature_table.tsv")
         df_merged.to_csv(out_path, sep="\t", index=False)
-        print(f"📦 Merged features ({', '.join(sources)}) -> {out_path}")
+        print(f"Merged features ({', '.join(sources)}) -> {out_path}")
 
 
-# ======================= reporting =======================
+# reporting 
 
 def _report_failed_extractions(results_folder):
     results_folder = Path(results_folder)
@@ -455,11 +505,11 @@ def _report_failed_extractions(results_folder):
         ]
         if not failed.empty:
             found_any = True
-            print(f"\n❌ Failures in {file_path.name} ({len(failed)})")
+            print(f"\nFailures in {file_path.name} ({len(failed)})")
             print(failed[["Geneid", "ProteinSequence", "DNASequence"]].to_string(index=False))
 
     if not found_any:
-        print("✅ All sequence extractions succeeded. No issues found.")
+        print("All sequence extractions succeeded. No issues found.")
 
 
 # keep backward-compat for the pipeline import

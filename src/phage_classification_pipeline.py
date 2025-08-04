@@ -122,13 +122,7 @@ def _build_comparison_and_report(regenerate: bool):
 
     print("[9] Writing Markdown report …")
     md = import_module("models.make_markdown_report")
-    md_args = argparse.Namespace(
-        report_dir=str(report_dir),
-        title="Phage Classification – Model Comparison Report",
-        regenerate=False,  # we just ran comparison above
-    )
-    md.main.__globals__["argparse"].ArgumentParser = _frozen_parser(md_args)
-    md.main()
+    md.main(input_dir="data", output_dir=str(report_dir))
 
     # Auto-open the report and the folder
     report_md = report_dir / "report.md"
@@ -233,7 +227,7 @@ def main():
     if args.report:
         _build_comparison_and_report(regenerate=False)
 
-    print("\n✅ Pipeline finished.")
+    print("\nPipeline finished.")
     print(f"- Normalized:   {normalized_dir.resolve()}")
     print(f"- Marked:       {marked_dir.resolve()}")
     print(f"- Filtered:     {filtered_dir.resolve()}")

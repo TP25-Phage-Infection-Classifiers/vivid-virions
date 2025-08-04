@@ -11,7 +11,7 @@ from sklearn.utils.class_weight import compute_class_weight
 import torch, torch.nn as nn, torch.nn.functional as F
 from torch.utils.data import DataLoader, TensorDataset
 
-# use package-relative imports (require __init__.py files)
+# use package-relative imports 
 from .._utils import find_logo_indices, load_logo_split, load_stratified_split
 from .._prep import prepare_xy, align_columns
 

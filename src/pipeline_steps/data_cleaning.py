@@ -54,7 +54,7 @@ def curate_dataset_folder(input_path, output_path):
             log_lines.append(f"File: {file_path.name} – ERROR: {e}")
             log_lines.append("")
 
-    # optional: write a cleaning log next to outputs
+    
     if tsv_files:
         log_path = output_folder / "filter_protocoll.txt"
         with open(log_path, "w", encoding="utf-8") as log_file:
