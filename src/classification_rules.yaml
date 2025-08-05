@@ -1,0 +1,35 @@
+Brandao_MCCM:
+  early: ["5"]
+  middle: ["10"]
+  late: ["15"]
+
+Finstrlova_Newman:
+  early: ["2", "5", "10"]
+  middle: ["20"]
+  late: ["30"]
+
+Guegler_T4_minusToxIN:
+  early: ["2.5"]
+  middle: ["5"]
+  late: ["10", "20", "30"]
+
+Guegler_T7_plusToxIN:
+  early: ["2.5", "5", "10"]
+  middle: ["20"]
+  late: ["30"]
+
+Lood:
+  early: ["5"]
+  middle: ["15"]
+  late: ["25"]
+
+Yang:
+  early: ["5"]
+  middle: ["10"]
+  late: ["20"]
+
+Sprenger_VC_WT_VP882_delta_cpdS:
+  early: ["0"]
+  middle: ["30"]
+  late: ["60"]
+

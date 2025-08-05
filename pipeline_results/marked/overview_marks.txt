@@ -1,0 +1,6 @@
+Brandao_MCCM_full_raw_counts_tpm.tsv: missing values: 0, negligible genes: 0, genes with a too high count at time 0: 325
+Finstrlova_Newman_full_raw_counts_tpm.tsv: missing values: 0, negligible genes: 0, genes with a too high count at time 0: 430
+Guegler_T4_minusToxIN_full_raw_counts_tpm.tsv: missing values: 0, negligible genes: 0, genes with a too high count at time 0: 398
+Guegler_T7_plusToxIN_full_raw_counts_tpm.tsv: missing values: 0, negligible genes: 0, genes with a too high count at time 0: 359
+Lood_full_raw_counts_tpm.tsv: missing values: 0, negligible genes: 0, genes with a too high count at time 0: 237
+Yang_full_raw_counts_tpm.tsv: missing values: 0, negligible genes: 0, genes with a too high count at time 0: 0

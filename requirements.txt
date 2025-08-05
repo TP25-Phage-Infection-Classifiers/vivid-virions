@@ -8,7 +8,7 @@ joblib
 conda environment von environment.yml erstellen:
 > conda env create -f environment.yml
 > conda env list
-> conda activate vividVirions
+> conda activate VividVirions
 
 conda environment updaten:
 > conda env update -f environment.yml
